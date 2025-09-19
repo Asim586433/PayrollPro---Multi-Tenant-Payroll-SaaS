@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayrollPro - Multi-Tenant Payroll SaaS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-left: 10px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        nav {
+            background-color: var(--primary);
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            position: relative;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--secondary);
+        }
+        
+        .nav-menu a.active {
+            background-color: var(--secondary);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Role Selector */
+        .role-selector {
+            background-color: var(--light);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .role-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .role-btn {
+            padding: 8px 15px;
+            background-color: white;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .role-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Main Content */
+        main {
+            padding: 30px 0;
+        }
+        
+        .dashboard-section {
+            display: none;
+        }
+        
+        .dashboard-section.active {
+            display: block;
+        }
+        
+        .section-header {
+            margin-bottom: 20px;
+        }
+        
+        .section-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .card p {
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .card-stat {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        /* Forms */
+        .form-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: var(--light);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .view-btn {
+            background-color: var(--info);
+            color: white;
+        }
+        
+        .edit-btn {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .delete-btn {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                flex-direction: column;
+                display: none;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-info {
+                margin-top: 15px;
+            }
+        }
+        
+        /* Role-specific styles */
+        .role-section {
+            display: none;
+        }
+        
+        .role-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Role Selector (for demo purposes) -->
+    <div class="role-selector">
+        <div class="container">
+            <div class="role-buttons">
+                <button class="role-btn active" data-role="superadmin">Super Admin</button>
+                <button class="role-btn" data-role="fiduciary">Fiduciary Admin</button>
+                <button class="role-btn" data-role="company">Company Manager</button>
+                <button class="role-btn" data-role="employee">Employee</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-money-check-alt"></i>
+                    <h1>PayrollPro</h1>
+                </div>
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=random" alt="User">
+                    <span>Admin User</span>
+                </div>
+            </div>
+        </div>
+        
+        <nav>
+            <div class="container">
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="#dashboard" class="nav-link active">Dashboard</a></li>
+                    <li><a href="#payroll" class="nav-link">Payroll</a></li>
+                    <li><a href="#absences" class="nav-link">Absences</a></li>
+                    <li><a href="#billing" class="nav-link">Billing</a></li>
+                    <li><a href="#reports" class="nav-link">Reports</a></li>
+                    <li><a href="#settings" class="nav-link">Settings</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="dashboard-section active">
+                <div class="section-header">
+                    <h2>Dashboard</h2>
+                    <p>Welcome to your payroll management dashboard</p>
+                </div>
+                
+                <!-- Role-specific dashboards -->
+                <!-- Super Admin Dashboard -->
+                <div class="role-section active" data-role="superadmin">
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Fiduciaries</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                            </div>
+                            <p>Total fiduciaries on the platform</p>
+                            <div class="card-stat">12</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Companies</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                            </div>
+                            <p>Total companies managed</p>
+                            <div class="card-stat">84</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Employees</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <p>Total employees in system</p>
+                            <div class="card-stat">1,254</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Recent Activity</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>User</th>
+                                        <th>Action</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2023-10-15 14:32</td>
+                                        <td>John Smith</td>
+                                        <td>Payroll Processed</td>
+                                        <td>Company: ABC Corp</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-10-15 13:15</td>
+                                        <td>Sarah Johnson</td>
+                                        <td>New Company Added</td>
+                                        <td>XYZ Enterprises</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-10-14 16:45</td>
+                                        <td>Michael Brown</td>
+                                        <td>Invoice Generated</td>
+                                        <td>Invoice #INV-2023-1045</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fiduciary Admin Dashboard -->
+                <div class="role-section" data-role="fiduciary">
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Managed Companies</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                            </div>
+                            <p>Companies under your management</p>
+                            <div class="card-stat">8</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Employees</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <p>Total employees across companies</p>
+                            <div class="card-stat">342</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Pending Tasks</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                            </div>
+                            <p>Tasks requiring your attention</p>
+                            <div class="card-stat">5</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Company Manager Dashboard -->
+                <div class="role-section" data-role="company">
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Employees</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <p>Employees in your company</p>
+                            <div class="card-stat">42</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>This Month's Payroll</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-euro-sign"></i>
+                                </div>
+                            </div>
+                            <p>Total payroll cost for current month</p>
+                            <div class="card-stat">€42,580</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Pending Absences</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-calendar-times"></i>
+                                </div>
+                            </div>
+                            <p>Leave requests awaiting approval</p>
+                            <div class="card-stat">3</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Employee Dashboard -->
+                <div class="role-section" data-role="employee">
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Next Payday</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                            </div>
+                            <p>Days until your next payment</p>
+                            <div class="card-stat">12</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Remaining Leave</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-umbrella-beach"></i>
+                                </div>
+                            </div>
+                            <p>Vacation days available</p>
+                            <div class="card-stat">18</div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Last Payment</h3>
+                                <div class="card-icon">
+                                    <i class="fas fa-euro-sign"></i>
+                                </div>
+                            </div>
+                            <p>Your last paycheck amount</p>
+                            <div class="card-stat">€2,450</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Payroll Section -->
+            <section id="payroll" class="dashboard-section">
+                <div class="section-header">
+                    <h2>Payroll Management</h2>
+                    <p>Process and manage employee payroll</p>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Generate Payroll</h3>
+                    <form id="payroll-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employee-select">Select Employee</label>
+                                <select id="employee-select" required>
+                                    <option value="">Select an employee</option>
+                                    <option value="1">John Doe</option>
+                                    <option value="2">Jane Smith</option>
+                                    <option value="3">Robert Johnson</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pay-period">Pay Period</label>
+                                <select id="pay-period" required>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="bi-weekly">Bi-Weekly</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="base-salary">Base Salary (€)</label>
+                                <input type="number" id="base-salary" name="base-salary" required step="0.01">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="overtime">Overtime Hours</label>
+                                <input type="number" id="overtime" name="overtime" step="0.5">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bonus">Bonus (€)</label>
+                                <input type="number" id="bonus" name="bonus" step="0.01">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="deductions">Deductions (€)</label>
+                                <input type="number" id="deductions" name="deductions" step="0.01">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn">Calculate Payroll</button>
+                    </form>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Payslip Preview</h3>
+                    <div class="payslip-preview">
+                        <div style="background: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <h3>ABC Company</h3>
+                                <p>Employee Payslip</p>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                                <div>
+                                    <p><strong>Employee:</strong> John Doe</p>
+                                    <p><strong>ID:</strong> EMP-042</p>
+                                    <p><strong>Position:</strong> Software Developer</p>
+                                </div>
+                                <div>
+                                    <p><strong>Pay Period:</strong> October 2023</p>
+                                    <p><strong>Payment Date:</strong> 2023-10-31</p>
+                                </div>
+                            </div>
+                            
+                            <table style="width: 100%; margin-bottom: 20px;">
+                                <thead>
+                                    <tr>
+                                        <th>Earnings</th>
+                                        <th>Amount (€)</th>
+                                        <th>Deductions</th>
+                                        <th>Amount (€)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Basic Salary</td>
+                                        <td>3,500.00</td>
+                                        <td>Tax</td>
+                                        <td>875.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Overtime</td>
+                                        <td>250.00</td>
+                                        <td>Social Security</td>
+                                        <td>350.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bonus</td>
+                                        <td>500.00</td>
+                                        <td>Health Insurance</td>
+                                        <td>150.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Earnings</strong></td>
+                                        <td><strong>4,250.00</strong></td>
+                                        <td><strong>Total Deductions</strong></td>
+                                        <td><strong>1,375.00</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div style="text-align: right; font-size: 1.2rem;">
+                                <strong>Net Pay: €2,875.00</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn">Generate Payslip</button>
+                        <button class="btn btn-secondary">Save as Draft</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Absences Section -->
+            <section id="absences" class="dashboard-section">
+                <div class="section-header">
+                    <h2>Absence Management</h2>
+                    <p>Track and manage employee absences</p>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Request Leave</h3>
+                    <form id="absence-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="leave-type">Leave Type</label>
+                                <select id="leave-type" required>
+                                    <option value="">Select leave type</option>
+                                    <option value="vacation">Vacation</option>
+                                    <option value="sick">Sick Leave</option>
+                                    <option value="personal">Personal Leave</option>
+                                    <option value="maternity">Maternity Leave</option>
+                                    <option value="paternity">Paternity Leave</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="employee">Employee</label>
+                                <select id="employee" required>
+                                    <option value="">Select employee</option>
+                                    <option value="1">John Doe</option>
+                                    <option value="2">Jane Smith</option>
+                                    <option value="3">Robert Johnson</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="leave-start">Start Date</label>
+                                <input type="date" id="leave-start" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="leave-end">End Date</label>
+                                <input type="date" id="leave-end" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="leave-reason">Reason for Leave</label>
+                            <textarea id="leave-reason" rows="3"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn">Submit Leave Request</button>
+                    </form>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Absence Records</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Leave Type</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>Vacation</td>
+                                    <td>2023-10-10</td>
+                                    <td>2023-10-15</td>
+                                    <td>Approved</td>
+                                    <td class="action-buttons">
+                                        <button class="action-btn view-btn">View</button>
+                                        <button class="action-btn edit-btn">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Jane Smith</td>
+                                    <td>Sick Leave</td>
+                                    <td>2023-10-12</td>
+                                    <td>2023-10-13</td>
+                                    <td>Approved</td>
+                                    <td class="action-buttons">
+                                        <button class="action-btn view-btn">View</button>
+                                        <button class="action-btn edit-btn">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Robert Johnson</td>
+                                    <td>Personal Leave</td>
+                                    <td>2023-10-20</td>
+                                    <td>2023-10-21</td>
+                                    <td>Pending</td>
+                                    <td class="action-buttons">
+                                        <button class="action-btn view-btn">View</button>
+                                        <button class="action-btn edit-btn">Edit</button>
+                                        <button class="action-btn delete-btn">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Billing Section -->
+            <section id="billing" class="dashboard-section">
+                <div class="section-header">
+                    <h2>Billing & Invoicing</h2>
+                    <p>Manage your billing and generate invoices</p>
+                </div>
+                
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Payslips Generated</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                        </div>
+                        <p>This billing cycle</p>
+                        <div class="card-stat">142</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Amount Due</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-euro-sign"></i>
+                            </div>
+                        </div>
+                        <p>Based on €15 per payslip</p>
+                        <div class="card-stat">€2,130</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Next Billing Date</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                        <p>Date of next invoice generation</p>
+                        <div class="card-stat">2023-11-01</div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Invoice History</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Date</th>
+                                    <th>Payslips</th>
+                                    <th>Amount (€)</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>INV-2023-1045</td>
+                                    <td>2023-10-01</td>
+                                    <td>135</td>
+                                    <td>2,025</td>
+                                    <td>Paid</td>
+                                    <td class="action-buttons">
+                                        <button class="action-btn view-btn">View</button>
+                                        <button class="action-btn edit-btn">Download</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INV-2023-0987</td>
+                                    <td>2023-09-01</td>
+                                    <td>128</td>
+                                    <td>1,920</td>
+                                    <td>Paid</td>
+                                    <td class="action-buttons">
+                                        <button class="action-btn view-btn">View</button>
+                                        <button class="action-btn edit-btn">Download</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INV-2023-0876</td>
+                                    <td>2023-08-01</td>
+                                    <td>121</td>
+                                    <td>1,815</td>
+                                    <td>Paid</td>
+                                    <td class="action-buttons">
+                                        <button class="action-btn view-btn">View</button>
+                                        <button class="action-btn edit-btn">Download</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="form-section" style="text-align: center;">
+                    <button class="btn">Generate New Invoice</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PayrollPro</h3>
+                    <p>Multi-tenant payroll SaaS platform designed for fiduciaries managing payroll for multiple companies.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Data Protection</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Business Park, Dublin, Ireland</li>
+                        <li><i class="fas fa-phone"></i> +353 1 234 5678</li>
+                        <li><i class="fas fa-envelope"></i> info@payrollpro.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 PayrollPro. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+        
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links and sections
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Show corresponding section
+                const targetId = this.getAttribute('href').substring(1);
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+        
+        // Role switching
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons and role sections
+                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.role-section').forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show corresponding role section
+                const role = this.getAttribute('data-role');
+                document.querySelector(`.role-section[data-role="${role}"]`).classList.add('active');
+            });
+        });
+        
+        // Form submission handlers
+        document.getElementById('payroll-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Payroll calculation submitted! This would connect to backend services in a real application.');
+        });
+        
+        document.getElementById('absence-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Leave request submitted! This would connect to backend services in a real application.');
+        });
+    </script>
+</body>
+</html>
